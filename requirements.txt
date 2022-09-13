@@ -1,0 +1,9 @@
+numpy==1.23.1
+pandas==1.4.3
+matplotlib==3.1.0
+torch==1.12.0
+torchaudio==0.12.0
+datasets==1.18.3
+transformers==4.20.1
+tqdm==4.64.0
+wandb==0.12.21
