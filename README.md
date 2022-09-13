@@ -17,13 +17,13 @@ We demonstrate the effectiveness of the proposed method on
 four downstream tasks: automatic speaker verification (ASV), emotion recognition (ER), automatic speech recognition (ASR) and intent classification (IC). 
 We conduct experiments to compare the performance of different five training methods in four tasks.
 
-| Method              | ASV EER        | ER WA            | ASR WER         | IC AAC            | 
+| Method              | ASV EER        | ER WA            | ASR WER         | IC ACC            | 
 | ------------------- | -------------- | ---------------- | --------------- | ----------------- | 
-| Fine-tuning         | $4.42\pm 0.25$ | $79.03 \pm 0.62$ | $7.87 \pm 0.08$ | $99.65 \pm 0.076$ | 
-| Conventional method | $3.95 \pm0.29$ | $79.19 \pm 0.44$ | $8.92 \pm 0.13$ | $99.61 \pm 0.042$ | 
-| Proposed methid     | $2.63\pm 0.09$ | $80.00 \pm 0.31$ | $7.90 \pm 0.06$ | $99.67 \pm 0.041$ | 
-| L-adapters-only     | $2.74\pm 0.09$ | $78.93 \pm 0.52$ | $9.50 \pm 0.08$ | $99.68 \pm 0.025$ | 
-| E-adapters-only     | $4.82\pm 0.02$ | $76.91 \pm 0.48$ | $9.00 \pm 0.16$ | $99.66 \pm 0.040$ | 
+| Fine-tuning         | $4.42\pm 0.25$ | $79.03 \pm 0.62$ | $7.87 \pm 0.08$ | $99.65 \pm 0.08$ | 
+| Conventional method | $3.95 \pm0.29$ | $79.19 \pm 0.44$ | $8.92 \pm 0.13$ | $99.61 \pm 0.04$ | 
+| Proposed methid     | $2.63\pm 0.09$ | $80.00 \pm 0.31$ | $7.90 \pm 0.06$ | $99.67 \pm 0.04$ | 
+| L-adapters-only     | $2.74\pm 0.09$ | $78.93 \pm 0.52$ | $9.50 \pm 0.08$ | $99.68 \pm 0.03$ | 
+| E-adapters-only     | $4.82\pm 0.02$ | $76.91 \pm 0.48$ | $9.00 \pm 0.16$ | $99.66 \pm 0.04$ | 
 
 <ol type=i>
     <li>Fine-tuning: Fine-tuning all layers of the WavLM encoder
