@@ -11,7 +11,8 @@ The proposed adapter architecture incorporates two types of adapters, namely Lay
 We use wavlm-base-plus as the model backbone.
 
 # Experiment and Results
-![result](https://user-images.githubusercontent.com/48460458/189800739-e711e953-9095-45d6-bdec-f509581965bb.png)
+<!-- ![result](https://user-images.githubusercontent.com/48460458/189800739-e711e953-9095-45d6-bdec-f509581965bb.png) -->
+<img width="478" alt="result_cap" src="https://user-images.githubusercontent.com/48460458/189801754-5514febf-d25e-4be9-8375-bf26d2bd1dd5.png">
 We demonstrate the effectiveness of the proposed method on
 four downstream tasks: automatic speaker verification (ASV), emotion recognition (ER), automatic speech recognition (ASR) and intent classification (IC). 
 We conduct experiments to compare the performance of different five training methods in four tasks.
