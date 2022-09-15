@@ -35,3 +35,20 @@ We conduct experiments to compare the performance of different five training met
     <li> L-Adapters-only: L-adapters are attached to all layers of the WavLM encoder.
     <li> E-adapters-only: E-adapters are inserting into all layers of the WavLM encoder.
 </ol>
+
+## Optimal learning rates
+We used a scheduler that warms to the maximum
+learning rate and then decays for ASV, ASR all but the
+conventional method, and IC. A scheduler that decays every
+certain step size from the initial learning rate is used for the
+others. We chose the best maximum and initial learning rates
+from {1e-3, 5e-4, 1e-4, 5e-5, 1e-5} for each architecture.
+
+
+| Method              | Module                                                         | ASV                                    | ER                                     | ASR                              | IC                                      | 
+| ------------------- | -------------------------------------------------------------- | -------------------------------------- | -------------------------------------- | -------------------------------- | --------------------------------------- | 
+| Fime-tuning         | Downstream head <br>Encoder                                    | 0.0005<br>0.0001                       | 0.0005<br>0.00005                      | 0.01<br>0.0001                   | 0.0005<br>0.0001                        | 
+| Conventional method | Downstream head<br>Adapters<br>Layernorm layer                 | 0.0005<br>0.00001<br>0.00001           | 0.0005<br>0.00001<br>0.00001           | 0.001<br>0.00001<br>0.00001      | 0.0005<br>0.00001<br>0.00001            | 
+| Proposed method     | Downstream head<br>L-adapters<br>E-adapters<br>Layernorm layer | 0.0005<br>0.0001<br>0.00001<br>0.00001 | 0.0005<br>0.0001<br>0.00005<br>0.00005 | 0.002<br>0.001<br>0.001<br>0.001 | 0.0005<br>0.00001<br>0.00001<br>0.00001 | 
+| L-adapters-only     | Downstream head<br>L-adapters<br>Layernorm layer               | 0.0005<br>0.0005<br>0.0005             | 0.0005<br>0.0005<br>0.0005             | 0.002<br>0.001<br>0.001          | 0.0005<br>0.0001<br>0.0001              | 
+| E-adapters-only     | Downstream head<br>E-adapters<br>Layernorm layer               | 0.0005<br>0.00001<br>0.00001           | 0.0005<br>0.00001<br>0.00001           | 0.002<br>0.00001<br>0.00001      | 0.0005<br>0.00001<br>0.00001            | 
