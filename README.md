@@ -22,28 +22,20 @@ We run experiments on five training methods as follows.
     <li> L-adapters-only: L-adapters are attached to all layers without E-adapters.
     <li> E-adapters-only: E-adapters are inserted into all layers without L-adapters.
 
-<img width="657" alt="result_cap" src="https://user-images.githubusercontent.com/48460458/189802186-482752a1-ad28-4482-bd6d-8ae11e582a8c.png">
+The performance comparison is shown in the figure and the table below. The table shows the error rate values of the right ends of curves in the figure.
+
+![result](https://user-images.githubusercontent.com/48460458/190456712-4f6252a6-f931-45ee-bea1-68a022d7738f.png)
 
 
-
-
-
-
-| Method              | # Params | ASV EER                                 | ER WA                                     | ASR WER                      | IC AAC                        | 
+| Method              | # Params | ASV                                 | ER                                     | ASR                      | IC                        | 
 | ------------------- | -------- | --------------------------------------- | ----------------------------------------- | ---------------------------- | ----------------------------- | 
-| Fine-tuning         | 85.1 M   | $4.42\pm 0.25$                          | $79.03 \pm 0.62$                          | $\boldsymbol{7.87} \pm 0.08$ | $99.65 \pm 0.076$             | 
-| Conventional method | 9.53 M   | $3.95 \pm0.29$                          | $79.19 \pm 0.44$                          | $8.92 \pm 0.13$              | $99.61 \pm 0.042$             | 
-| Proposed method     | 9.13 M   | $\boldsymbol{2.63}\pm 0.09$ | $\boldsymbol{80.00} \pm 0.31$ | $7.90 \pm 0.06$              | $99.67 \pm 0.041$             | 
-| L-adapters-only     | 4.74 M   | $2.74\pm 0.09$                          | $78.93 \pm 0.52$                          | $9.50 \pm 0.08$              | $\boldsymbol{99.68}\pm 0.025$ | 
-| E-adapters-only     | 4.79 M   | $4.82\pm 0.02$                          | $76.91 \pm 0.48$                          | $9.00 \pm 0.16$              | $99.66 \pm 0.040$             | 
+| Fine-tuning         | 85.1 M   | $4.42\pm 0.25$                          | $21.0 \pm 0.62$                          | $\boldsymbol{7.87} \pm 0.08$ | $0.35 \pm 0.08$             | 
+| Conventional method | 9.53 M   | $3.95 \pm0.29$                          | $20.8 \pm 0.44$                          | $8.92 \pm 0.13$              | $0.39 \pm 0.04$             | 
+| Proposed method     | 9.13 M   | $\boldsymbol{2.63}\pm 0.09$ | $\boldsymbol{20.0} \pm 0.31$ | $7.90 \pm 0.06$              | $\boldsymbol{0.33} \pm 0.04$             | 
+| L-adapters-only     | 4.74 M   | $2.74\pm 0.09$                          | $21.1 \pm 0.52$                          | $9.50 \pm 0.08$              | $\boldsymbol{0.33}\pm 0.04$ | 
+| E-adapters-only     | 4.79 M   | $4.82\pm 0.02$                          | $23.1 \pm 0.48$                          | $9.00 \pm 0.16$              | $0.34 \pm 0.04$             | 
 
-<ol type=i>
-    <li>Fine-tuning: Fine-tuning all layers of the WavLM encoder
-    <li>Conventional method: Adapters are inserted into after a MHSA module and a feedfoward module in each layer of the WavLM encoder.
-    <li>Proposed method: There are L-adapters and E-adapters attached on the WavLM encoder. L-adapters are attached to all layers and E-adapters are inserted into all but the final layer.
-    <li> L-Adapters-only: L-adapters are attached to all layers of the WavLM encoder.
-    <li> E-adapters-only: E-adapters are inserting into all layers of the WavLM encoder.
-</ol>
+
 
 ## Optimal learning rates
 We used a scheduler that warms to the maximum
