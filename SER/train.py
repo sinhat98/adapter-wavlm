@@ -31,7 +31,7 @@ seed=42; fix_seed(42)
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('run_name')
+    parser.add_argument('--run_name', type=str, default='sample_run')
     parser.add_argument('--use_skip', type=strtobool, default=False)
     parser.add_argument('--use_adapter_fc', type=strtobool, default=True)
     parser.add_argument('--use_adapter_norm', type=strtobool, default=True)
