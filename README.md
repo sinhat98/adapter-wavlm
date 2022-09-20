@@ -8,6 +8,18 @@ Fine-tuning of self-supervised models is a powerful transfer learning method in 
 The proposed adapter architecture incorporates two types of adapters, namely Layer adapters (L-adapters) and Encoder adapter (E-adapters), into a frozen backbone. The L-adapters bridge each intermediate layer and the top layer as shown in Figure 1a. They help the model to quickly adapt speech representations to various downstream tasks, and also to reduce dependency on the initialization of adapter parameters. The E-adapters are inserted to each encoder layer in a similar way as previous work [EFFICIENT ADAPTER TRANSFER OF SELF-SUPERVISED SPEECH MODELS FOR AUTOMATIC SPEECH RECOGNITION](https://arxiv.org/pdf/2202.03218.pdf) as shown in Figure 1b. In contrast to the previous work, our architecture does not have adapters after the multi-head self-attention (MHSA) modules, and alternatively has L-adapters.
 We use wavlm-base-plus as the model backbone.
 
+# Installation and Running experiments
+You need to install packages necessary for running experiments. Please run the following command.
+```python
+pip install -r requirement.txt
+```
+
+The following command provides an example of training in the proposed method. Please select task_name from ASV, ER, ASR, or IC.
+```sh
+# ./run.sh task_name
+./run.sh ASR
+```
+
 # Experiment and Results
 <!-- ![result](https://user-images.githubusercontent.com/48460458/189800739-e711e953-9095-45d6-bdec-f509581965bb.png) -->
 
