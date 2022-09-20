@@ -185,7 +185,7 @@ def compute_eer(scores: Union[np.ndarray, List[float]],
 
 
 def train_model(model, dataloaders_dict, optimizer, scheduler, num_epochs, val_interval=6, log_wandb=False):
-    df_clean = pd.read_csv('../data/voxceleb/veri_test_cleaned.csv')
+    df_clean = pd.read_csv('veri_test_cleaned.csv')
     idxs = np.random.choice(len(dataloaders_dict['train'].dataset), 10000)
 
     pbar_update = 1 / sum([len(v) for v in dataloaders_dict.values()])

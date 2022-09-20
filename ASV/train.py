@@ -1,9 +1,20 @@
-import numpy as np
 import pandas as pd
 import torch, torchaudio
-import torch.nn as nn
+import sys, os
+import wandb
+import argparse
+from distutils.util import strtobool
+sys.path.append(os.pardir)
 
 from transformers import Wav2Vec2FeatureExtractor
+
+from modeling import (
+    AdaWavLMForSpeakerVerification,
+    WavLMForSpeakerVerification
+)
+
+from speechbrain.dataio.dataset import DynamicItemDataset
+from speechbrain.dataio.sampler import DynamicBatchSampler
 
 from utils import (
     TestDataset,
@@ -13,25 +24,7 @@ from utils import (
     fix_seed,
 )
 
-from ..modeling import (
-    AdaWavLMForSpeakerVerification,
-    WavLMForSpeakerVerification
-)
-
-
-
-import numpy as np
-import wandb
-from sklearn.metrics import f1_score
-
-from speechbrain.dataio.dataset import DynamicItemDataset
-from speechbrain.dataio.sampler import DynamicBatchSampler
-
-pretrained_model= 'microsoft/wavlm-base-plus'
-
-import argparse
-from distutils.util import strtobool
-
+fix_seed(42)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -44,18 +37,23 @@ def main():
     parser.add_argument('--eada_emb_size', type=int, default=256)
     parser.add_argument('--lada_emb_size', type=int, default=512)
     parser.add_argument('--proj_size', type=int, default=768)
+    
     parser.add_argument('--train_encada', type=strtobool, default=False)
     parser.add_argument('--train_encoder', type=strtobool, default=False)
     parser.add_argument('--train_lawithea', type=strtobool, default=False)
     parser.add_argument('--weighted_sum', type=strtobool, default=False) 
+    
     parser.add_argument('--use_adapter_attn', type=strtobool, default=True)
     parser.add_argument('--use_adapter_ff', type=strtobool, default=True)
+    
     parser.add_argument('--adapter_init_std', type=float, default=1e-3)
     parser.add_argument('--ladapter_init_std', type=float, default=1e-3)
+    
     parser.add_argument('--encoder_lr', type=float, default=1e-4)
     parser.add_argument('--eadapter_lr', type=float, default=1e-5)
     parser.add_argument('--ladapter_lr', type=float, default=1e-5)
     parser.add_argument('--down_lr', type=float, default=5e-4)
+
     parser.add_argument('--wandb_log', type=strtobool, default=False)
 
     args = parser.parse_args()
@@ -159,7 +157,7 @@ def main():
     test_dataset = TestDataset('veri_test_id.csv')
     
     config={
-            "pretrained_model": pretrained_model,
+            "pretrained_model": 'microsoft/wavlm-base-plus',
             "model_config": model_config,
             "epochs": 6,
             "batch_size": {'train':12*32,
@@ -183,8 +181,6 @@ def main():
 
 
     # setting
-    seed = config['seed']
-    fix_seed(seed)
     num_epochs = config['epochs']
     batch_size = config['batch_size']
     sc_setting = config['scheduler']

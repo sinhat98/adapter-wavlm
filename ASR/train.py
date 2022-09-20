@@ -1,8 +1,15 @@
+from pprint import pprint
 from datasets import load_metric
 import torch
 import numpy as np
 import wandb
+import sys, os
+sys.path.append(os.pardir)
+import argparse
+from distutils.util import strtobool
 
+from transformers import WavLMForCTC # Original WavLMModel
+from modeling import AdaWavLMForCTC # WavLMModel with Adapter
 
 from utils import (
     LibriSpeechDataset, 
@@ -10,20 +17,8 @@ from utils import (
     train_model,
     fix_seed
 )
-processor = LibriSpeechDataset.processor
 
-from transformers import WavLMForCTC # Original WavLMModel
-from ..modeling import AdaWavLMForCTC # WavLMModel with Adapter
-
-import re, argparse
-from distutils.util import strtobool
-
-pretrained_model = 'microsoft/wavlm-base'
 fix_seed(42)
-
-
-
-
 
 def main():
     parser = argparse.ArgumentParser()
@@ -52,10 +47,12 @@ def main():
     parser.add_argument('--weighted_sum', type=strtobool, default=False) 
     parser.add_argument('--train_lawithea', type=strtobool, default=False)
 
+    parser.add_argument('--wandb_log', type=strtobool, default=False)
+
     args = parser.parse_args()
     
-    train_dataset = LibriSpeechDataset('LibriSpeech/LL10h.csv')
-    val_dataset = LibriSpeechDataset('LibriSpeech/dev-clean.csv')
+    train_dataset = LibriSpeechDataset('LL10h.csv')
+    val_dataset = LibriSpeechDataset('dev-clean.csv')
     processor = train_dataset.processor
     collator = DataCollatorCTCWithPadding(processor=processor, padding=True)
 
@@ -145,22 +142,23 @@ def main():
             'layer_norm':args.ladapter_lr,
             }
         
-        config={
-            "pretrained_model": pretrained_model,
-            "dataset": 'LL10h',
-            "epochs": 100,
-            "batch_size": {'train':8, 'val':4},
-            "model_config": model_config,
-            "learning_rate": learning_rate,
-            'optimizer':'Adam',
-            "scheduler": {'type':'StepLR', 'step':25, 'gamma':0.3} if args.train_encada and args.use_steplr else {'type':'LambdaLR', 'param':{'alpha':0.20, 'beta':0.03, 'start':10, 'end':1.0, 'scale':10}},
-        }
+    config={
+        "pretrained_model": 'microsoft/wavlm-base-plus',
+        "dataset": 'LL10h',
+        "epochs": 100,
+        "batch_size": {'train':8, 'val':4},
+        "model_config": model_config,
+        "learning_rate": learning_rate,
+        'optimizer':'Adam',
+        "scheduler": {'type':'StepLR', 'step':25, 'gamma':0.3} if args.train_encada and args.use_steplr else {'type':'LambdaLR', 'param':{'alpha':0.20, 'beta':0.03, 'start':10, 'end':1.0, 'scale':10}},
+    }
 
-    wandb.init(
-        project="ASR",
-        config=config,
-        id=args.run_name
-    )
+    if args.wandb_log:
+        wandb.init(
+            project="ASR",
+            config=config,
+            id=args.run_name
+        )
 
     num_epochs = config['epochs']
     batch_size = config['batch_size']

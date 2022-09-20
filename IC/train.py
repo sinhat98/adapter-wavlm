@@ -1,19 +1,20 @@
-from transformers import WavLMForSequenceClassification # Original WavLMModel
+import torch
+import wandb
+import argparse
+import sys, os
+sys.path.append(os.pardir)
+from distutils.util import strtobool
 
+from transformers import WavLMForSequenceClassification # Original WavLMModel
+from modeling import AdaWavLMForSequenceClassification
 from utils import (
     FluentCommandsDataset,
     ICCollator,
     train_model,
     fix_seed
 )
-from ..modeling import AdaWavLMForSequenceClassification
 
-import torch
-import wandb
-import argparse
-from distutils.util import strtobool
-
-pretrained_model = 'microsoft/wavlm-base'
+fix_seed(42)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -41,7 +42,7 @@ def main():
     parser.add_argument('--eadapter_lr', type=float, default=1e-5)
     parser.add_argument('--ladapter_lr', type=float, default=1e-5)
 
-    parser.add_argument('--wanbd_log', type=strtobool, default=False)
+    parser.add_argument('--wandb_log', type=strtobool, default=False)
 
     args = parser.parse_args()
 
@@ -51,7 +52,6 @@ def main():
     collator=ICCollator(train_dataset.extractor)
 
     if args.train_encoder or args.weighted_sum:
-
         model_config = {'id2label': train_dataset.id2label,
                         'label2id': train_dataset.label2id,
                         'num_labels': len(train_dataset.id2label),
@@ -66,7 +66,6 @@ def main():
                         }
 
     elif args.train_encada:
-
         model_config = {'id2label': train_dataset.id2label,
                         'label2id': train_dataset.label2id,
                         'num_labels': len(train_dataset.id2label),
@@ -129,14 +128,15 @@ def main():
                          'layer_norm':args.ladapter_lr
                         }
 
-    config={"pretrained_model": pretrained_model,
+    config={"pretrained_model": 'microsoft/wavlm-base-plus',
             "model_config": model_config,
             "epochs": 7,
             "batch_size": 16,
             "learning_rate": learning_rate,
             "optimizer": "Adam",
             "scheduler": {'type':'LambdaLR', 'step': [0.1, 0.5, 0.7, 1.0, 0.5, 0.3, 0.1, 0]}
-            },
+            }
+
     if args.wandb_log:
         wandb.init(
             project="IC",
@@ -148,7 +148,7 @@ def main():
     batch_size = config['batch_size']
     learning_rate = config['learning_rate']
     sc_setting = config['scheduler']
-    fix_seed(config['seed'])
+    pretrained_model = config['pretrained_model']
 
 
     train_loader = torch.utils.data.DataLoader(train_dataset, collate_fn=collator, batch_size=batch_size, shuffle=True, num_workers=8)

@@ -3,6 +3,18 @@ import numpy as np
 import wandb
 import argparse
 from torch.utils.data import DataLoader
+import sys, os
+sys.path.append(os.pardir)
+from sklearn.model_selection import KFold
+from distutils.util import strtobool
+
+from transformers import (
+    Wav2Vec2FeatureExtractor,
+    WavLMForSequenceClassification # Original WavLMModel
+)
+
+from modeling import AdaWavLMForSequenceClassification # WavLM with Adapter
+
 
 from utils import (
     IemocapDataset, 
@@ -11,23 +23,11 @@ from utils import (
     fix_seed
 )
 
-from transformers import (
-    Wav2Vec2FeatureExtractor,
-    WavLMForSequenceClassification # Original WavLMModel
-)
-
-from ..modeling import AdaWavLMForSequenceClassification # WavLM with Adapter
-
-from sklearn.model_selection import train_test_split, KFold
-
-from distutils.util import strtobool
+fix_seed(42)
 
 extractor = Wav2Vec2FeatureExtractor.from_pretrained('superb/wav2vec2-base-superb-er') # for ER
 train_collator = Collator(extractor, 200000) 
 test_collator = Collator(extractor)
-
-pretrained_model = 'wavlm-base-plus'
-seed=42; fix_seed(42)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -40,20 +40,24 @@ def main():
     parser.add_argument('--lada_emb_size', type=int, default=512)
     parser.add_argument('--eada_emb_size', type=int, default=256)
     parser.add_argument('--proj_size', type=int, default=256)
+
     parser.add_argument('--train_encada', type=strtobool, default=False)
     parser.add_argument('--train_encoder', type=strtobool, default=False)
     parser.add_argument('--train_lawithea', type=strtobool, default=False)
     parser.add_argument('--weighted_sum', type=strtobool, default=False) 
+
     parser.add_argument('--use_adapter_attn', type=strtobool, default=True)
     parser.add_argument('--use_adapter_ff', type=strtobool, default=True)
-    parser.add_argument('--val_interval', type=int, default=1)
+
     parser.add_argument('--adapter_init_std', type=float, default=1e-3)
     parser.add_argument('--ladapter_init_std', type=float, default=1e-3)
     parser.add_argument('--downhead_lr', type=float, default=5e-4)
     parser.add_argument('--encoder_lr', type=float, default=5e-5)
     parser.add_argument('--ladapter_lr', type=float, default=1e-4)
     parser.add_argument('--eadapter_lr', type=float, default=1e-5)
+    
     parser.add_argument('--wandb_log', type=strtobool, default=False)
+    
     args = parser.parse_args()
 
     if args.train_encoder or args.weighted_sum:
@@ -83,8 +87,7 @@ def main():
         model_config = {'num_labels':4,
                         'classifier_proj_size':args.proj_size,
                         'use_adapter_to_output':True,
-                        'adapter_to_output_layer_size': {str(i):args.lada_emb_size for i in range(0, 12)} if args.new_exp\
-                                                            else {str(i):args.lada_emb_size for i in range(0,12)},
+                        'adapter_to_output_layer_size': {str(i):args.lada_emb_size for i in range(0, 12)},
                         'use_adapter_to_output_weighted_sum':True,
                         'adapter_embedding_size': {str(i):args.eada_emb_size for i in range(0,11)},
                         'use_residual':args.use_skip,
@@ -126,7 +129,7 @@ def main():
                         }
 
     config={
-        "pretrained_model": pretrained_model,
+        "pretrained_model": 'microsoft/wavlm-base-plus',
         "model_config": model_config,
         "dataset": 'IEMOCAP_full',
         "epochs": 20,
@@ -142,15 +145,15 @@ def main():
             id=args.run_name,
             settings=wandb.Settings(start_method='fork')
         )
-        config = wandb.config
 
     # 設定
     num_epochs = config['epochs']
     batch_size = config['batch_size']
+    pretrained_model = config['pretrained_model']
 
     _emotions = {'ang': 0, 'hap': 1, 'exc': 1, 'sad': 2, 'neu':3}
     dataset = IemocapDataset(root='../data/IEMOCAP_full_release', script_impro=['script', 'impro'], emapping=_emotions)
-    kf = KFold(n_splits=5, shuffle=True, random_state=seed)
+    kf = KFold(n_splits=5, shuffle=True, random_state=42)
     ua = []
     wa = []
     for k, (train_indices, val_indices) in enumerate(kf.split(range(len(dataset)))):
