@@ -1,6 +1,5 @@
 # Abstract
 Fine-tuning of self-supervised models is a powerful transfer learning method in a variety of fields, including speech pro- cessing, since it can utilize generic feature representations obtained from large amounts of unlabeled data. Fine-tuning however, requires a new parameter set for each downstream task, which is parameter inefficient. Adapter architecture is proposed to partially solve this issue by inserting lightweight learnable modules into a frozen pre-trained model. However, existing adapter architectures fail to adaptively leverage low- to high-level features stored in different layers, which is necessary for solving various kinds of speech processing tasks. Thus, we propose a new adapter architecture to acquire fea- ture representations more flexibly for various speech tasks. In experiments, we applied this adapter to WavLM on four speech tasks. It performed on par or better than na ̈ıve fine-tuning with only 11% of learnable parameters. It also outperformed an existing adapter architecture.
-All experiments in this work were conducted with four 16GB memory GPUs.
 
 
 # Adapter Architecture
@@ -28,6 +27,7 @@ The following command provides an example of training in the proposed method. Pl
 We demonstrate the effectiveness of the proposed method on
 four downstream tasks: automatic speaker verification (ASV), emotion recognition (ER), automatic speech recognition (ASR) and intent classification (IC). 
 We conduct experiments to compare the performance of different five training methods in four tasks.
+All experiments in this work were conducted with four 16GB memory GPUs.
 
 We run experiments on five training methods as follows.
     <li> Fine-tuning the top $l$ layers for $l = 1, 2, \dots ,12$. 
