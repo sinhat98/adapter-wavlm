@@ -3,7 +3,7 @@ Fine-tuning of self-supervised models is a powerful transfer learning method in 
 
 
 # Adapter Architecture
-<img width="337" alt="layeradapter" src="https://user-images.githubusercontent.com/48460458/189790212-b1863b1a-c985-4e1f-86a4-363cd9f31ffc.png">
+#<img width="337" alt="layeradapter" src="https://user-images.githubusercontent.com/48460458/189790212-b1863b1a-c985-4e1f-86a4-363cd9f31ffc.png">
 ![image](https://user-images.githubusercontent.com/48460458/197088193-85d2cb3f-c16a-41f1-a2f7-fad73209bdde.png)
 
 The proposed adapter architecture incorporates two types of adapters, namely Layer adapters (L-adapters) and Encoder adapter (E-adapters), into a frozen backbone. The L-adapters bridge each intermediate layer and the top layer as shown in Figure 1a. They help the model to quickly adapt speech representations to various downstream tasks, and also to reduce dependency on the initialization of adapter parameters. The E-adapters are inserted to each encoder layer in a similar way as previous work (https://arxiv.org/pdf/2202.03218.pdf) as shown in Figure 1b. In contrast to the previous work, our architecture does not have adapters after the multi-head self-attention (MHSA) modules, and alternatively has L-adapters.
