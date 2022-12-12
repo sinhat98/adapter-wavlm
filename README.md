@@ -67,3 +67,6 @@ from {1e-3, 5e-4, 1e-4, 5e-5, 1e-5} for each architecture all but the down strea
 | Proposed method     | Downstream head<br>L-adapters<br>E-adapters<br>Layernorm layer | 5e-4<br>1e-4<br>1e-5<br>1e-5 |5e-4 <br>1e-4<br>5e-5<br>5e-5 | 2e-3<br>1e-3<br>1e-3<br>1e-3 | 5e-4<br>1e-5 <br>1e-5 <br>1e-5 | 
 | L-adapters-only     | Downstream head<br>L-adapters<br>Layernorm layer               | 5e-4<br>5e-4<br>5e-4             | 5e-4<br>5e-4<br>5e-4             | 2e-3<br>1e-3<br>1e-3          | 5e-4<br>1e-4<br>1e-4              | 
 | E-adapters-only     | Downstream head<br>E-adapters<br>Layernorm layer               | 5e-4<br>1e-5<br>1e-5           | 5e-4<br>1e-5<br>1e-5           | 2e-3<br>1e-5<br>1e-5      | 5e-4<br>1e-5<br>1e-5            | 
+
+# Note
+The paper has been uploaded to arXiv(https://arxiv.org/abs/2212.02780) on 6 Dec 2022
